@@ -1,0 +1,554 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07110f">
+<title>CyberGuard | Security Challenge</title>
+<style>
+:root {
+  --bg: #07110f;
+  --panel: #0d1c19;
+  --panel2: #102521;
+  --green: #5dffb0;
+  --cyan: #55e7f2;
+  --text: #edfff6;
+  --muted: #a3beb3;
+  --red: #ff737b;
+  --line: #24473b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 10% 0%, #164638 0, transparent 40%),
+    radial-gradient(ellipse at 100% 90%, #103a40 0, transparent 38%),
+    repeating-linear-gradient(0deg, transparent 0 39px, #5dffb008 40px),
+    repeating-linear-gradient(90deg, transparent 0 39px, #5dffb008 40px),
+    var(--bg);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px 6%;
+  border-bottom: 1px solid var(--line);
+  background: #07110fe8;
+}
+.brand { font-size: 19px; font-weight: 800; letter-spacing: 1px; }
+.brand span { color: var(--green); }
+.status {
+  color: var(--green);
+  font-size: 12px;
+  letter-spacing: 1.5px;
+}
+main { max-width: 1000px; padding: 30px 18px 55px; margin: auto; }
+.hero { text-align: center; margin: 12px auto 28px; }
+.eyebrow {
+  color: var(--green);
+  font-size: 12px;
+  letter-spacing: 3px;
+  font-weight: 800;
+}
+h1 { font-size: clamp(30px, 6vw, 54px); margin: 12px 0; }
+h1 span { color: var(--green); }
+.subtitle { color: var(--muted); line-height: 1.7; }
+.panel {
+  background: linear-gradient(145deg, #10231f, #091613);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: clamp(18px, 4vw, 32px);
+  box-shadow: 0 15px 50px #0005;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.stat {
+  background: #102a23;
+  border: 1px solid #285344;
+  border-radius: 12px;
+  padding: 14px 6px;
+}
+.stat strong { display: block; font-size: 22px; color: var(--green); }
+.stat small { color: var(--muted); font-size: 11px; letter-spacing: 1px; }
+input {
+  width: 100%;
+  background: #071411;
+  border: 1px solid #386656;
+  border-radius: 10px;
+  padding: 14px;
+  color: white;
+  font-size: 16px;
+  margin: 12px 0;
+}
+button {
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 13px 17px;
+  transition: transform .15s, background .15s;
+}
+button:hover { transform: translateY(-1px); }
+.primary {
+  background: var(--green);
+  color: #052117;
+  border: none;
+}
+.primary:hover { background: #a2ffd0; }
+.secondary {
+  background: transparent;
+  border: 1px solid #416b5c;
+  color: var(--text);
+}
+.full { width: 100%; margin-top: 8px; }
+.hidden { display: none !important; }
+.quiz-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.tag {
+  color: var(--cyan);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.timer {
+  font-size: 23px;
+  font-weight: 850;
+  color: var(--green);
+}
+.timer.urgent { color: var(--red); }
+.track {
+  height: 7px;
+  background: #203a32;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 18px 0 24px;
+}
+#progressBar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--green), var(--cyan));
+  transition: width .25s;
+}
+#question {
+  font-size: clamp(21px, 4vw, 30px);
+  line-height: 1.4;
+  margin: 18px 0;
+}
+.options { display: grid; gap: 11px; }
+.option {
+  text-align: left;
+  color: var(--text);
+  background: #10251f;
+  border: 1px solid #315747;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.option .letter {
+  display: grid;
+  place-items: center;
+  min-width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #1d4034;
+  color: var(--green);
+}
+.option:hover:not(:disabled) {
+  border-color: var(--green);
+  background: #17352a;
+}
+.option:disabled { cursor: default; opacity: .94; }
+.option.correct { border-color: var(--green); background: #16452f; }
+.option.wrong { border-color: var(--red); background: #48232a; }
+.feedback { min-height: 25px; color: var(--muted); margin: 17px 0 0; }
+.result-score { font-size: 48px; color: var(--green); font-weight: 900; }
+.rank-card {
+  margin: 18px 0;
+  padding: 16px;
+  border: 1px solid #315747;
+  background: #10251f;
+  border-radius: 12px;
+}
+.rank-card h3 { margin: 5px 0; color: var(--green); }
+#leaderboard { padding-left: 27px; }
+#leaderboard li {
+  padding: 12px 8px;
+  border-bottom: 1px solid #244137;
+  color: var(--text);
+}
+#leaderboard li:first-child { color: var(--green); font-weight: 800; }
+.muted { color: var(--muted); font-size: 13px; line-height: 1.6; }
+footer { text-align: center; color: #76978a; font-size: 12px; padding: 20px; }
+@media (max-width: 480px) {
+  header { padding: 16px; }
+  .brand { font-size: 15px; }
+  .status { font-size: 10px; }
+  main { padding: 20px 12px 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">⬡ CYBER<span>GUARD</span></div>
+  <div class="status">● TRAINING SYSTEM ONLINE</div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="eyebrow">CYBER SECURITY TRAINING // 001</div>
+    <h1>Think Smart.<br><span>Stay Secure.</span></h1>
+    <p class="subtitle">
+      Test your cyber skills. Beat the clock. Become a Cyber Hero.
+    </p>
+  </section>
+
+  <section class="panel" id="startScreen">
+    <div class="stats">
+      <div class="stat"><strong>10</strong><small>QUESTIONS</small></div>
+      <div class="stat"><strong>15s</strong><small>PER QUESTION</small></div>
+      <div class="stat"><strong>10</strong><small>MAX POINTS</small></div>
+    </div>
+    <h2>Initialize your challenge</h2>
+    <p class="subtitle">Enter a nickname and see how well you can protect yourself online.</p>
+    <form id="startForm">
+      <label for="nickname">Player nickname</label>
+      <input id="nickname" maxlength="20" autocomplete="off"
+             placeholder="e.g. CyberTiger" required>
+      <button class="primary full" type="submit">START CHALLENGE →</button>
+    </form>
+    <p class="muted">Tip: use a nickname, not your full name or personal details.</p>
+  </section>
+
+  <section class="panel hidden" id="quizScreen">
+    <div class="quiz-top">
+      <span class="tag" id="questionNumber">QUESTION 01 / 10</span>
+      <span class="timer" id="timer" aria-live="polite">15s</span>
+    </div>
+    <div class="track"><div id="progressBar"></div></div>
+    <div class="tag">SECURITY KNOWLEDGE CHECK</div>
+    <h2 id="question"></h2>
+    <div class="options" id="options"></div>
+    <p class="feedback" id="feedback" aria-live="polite"></p>
+  </section>
+
+  <section class="panel hidden" id="resultScreen">
+    <div class="eyebrow">CHALLENGE COMPLETE</div>
+    <h2 id="resultTitle">System report</h2>
+    <div class="result-score" id="finalScore">0/10</div>
+    <p class="subtitle" id="resultMessage"></p>
+    <div class="rank-card">
+      <div class="tag">YOUR CYBER RANK</div>
+      <h3 id="rank">Cyber Learner</h3>
+      <p id="rankDescription" class="muted"></p>
+    </div>
+    <h2>🏆 Top 10 leaderboard</h2>
+    <ol id="leaderboard"></ol>
+    <p class="muted">
+      This leaderboard is stored in this browser on this device.
+      It is not a worldwide leaderboard. Scores may disappear if browser
+      storage is cleared.
+    </p>
+    <button class="primary full" id="playAgain">↻ PLAY AGAIN</button>
+    <button class="secondary full" id="clearScores">Clear local leaderboard</button>
+  </section>
+</main>
+
+<footer>CYBERGUARD TRAINING TERMINAL • Learn. Think. Protect.</footer>
+
+<script>
+"use strict";
+
+const questions = [
+  {
+    q: "What should you do with a suspicious email link?",
+    a: ["Click it immediately", "Ask a trusted adult and check it",
+        "Send your password", "Forward it to everyone"],
+    c: 1,
+    why: "Suspicious links may lead to fake websites. Check with a trusted adult."
+  },
+  {
+    q: "Which password is the safest choice?",
+    a: ["123456", "password", "Your first name", "A long, unique password"],
+    c: 3,
+    why: "A long, unique password is harder to guess. Never share it with friends."
+  },
+  {
+    q: "Someone online asks you for your password. What should you do?",
+    a: ["Tell them", "Post it in chat",
+        "Keep it private and tell a trusted adult", "Use the same password for them"],
+    c: 2,
+    why: "Keep passwords private, even if someone online asks for them."
+  },
+  {
+    q: "What is phishing?",
+    a: ["A trick to steal information", "A computer keyboard",
+        "A software update", "A type of screen"],
+    c: 0,
+    why: "Phishing uses deceptive messages or websites to trick people into sharing information."
+  },
+  {
+    q: "How should you handle software updates?",
+    a: ["Ignore every update", "Download from random pop-ups",
+        "Disable all security", "Update through trusted settings with adult help"],
+    c: 3,
+    why: "Updates from trusted sources can fix security problems."
+  },
+  {
+    q: "A pop-up says you won a prize you never entered for. What should you do?",
+    a: ["Enter your address", "Close it and check with a trusted adult",
+        "Give it your password", "Click every button"],
+    c: 1,
+    why: "Unexpected prize messages can be scams. Don't enter personal details."
+  },
+  {
+    q: "Why should important accounts have different passwords?",
+    a: ["It makes them public", "It makes typing shorter",
+        "A leaked password is less likely to unlock other accounts",
+        "It removes every virus"],
+    c: 2,
+    why: "Unique passwords help stop one compromised account from putting others at risk."
+  },
+  {
+    q: "What is a safer habit when using public Wi-Fi?",
+    a: ["Share passwords in public", "Trust every pop-up",
+        "Avoid sensitive activities on untrusted networks",
+        "Turn off every security feature"],
+    c: 2,
+    why: "Be cautious with sensitive accounts on networks you don't trust."
+  },
+  {
+    q: "What does two-factor authentication do?",
+    a: ["Adds another step to verify your identity",
+        "Makes your profile public", "Shortens your password",
+        "Automatically removes every scam"],
+    c: 0,
+    why: "Two-factor authentication adds a second verification step to help protect an account."
+  },
+  {
+    q: "You think your account has been hacked. What should you do?",
+    a: ["Ignore it", "Share your password with friends",
+        "Keep using it without checking", "Tell a trusted adult and secure the account"],
+    c: 3,
+    why: "Get help promptly, secure the account using official steps, and change compromised passwords."
+  }
+];
+
+let current = 0;
+let score = 0;
+let seconds = 15;
+let timerId = null;
+let nextId = null;
+let locked = false;
+let nickname = "Cyber Hero";
+
+const $ = id => document.getElementById(id);
+
+function showScreen(screenId) {
+  ["startScreen", "quizScreen", "resultScreen"].forEach(id => {
+    $(id).classList.toggle("hidden", id !== screenId);
+  });
+}
+
+function startQuiz(event) {
+  if (event) event.preventDefault();
+  clearInterval(timerId);
+  clearTimeout(nextId);
+
+  nickname = $("nickname").value.trim().slice(0, 20) || "Cyber Hero";
+  current = 0;
+  score = 0;
+  showScreen("quizScreen");
+  showQuestion();
+}
+
+function showQuestion() {
+  clearInterval(timerId);
+  clearTimeout(nextId);
+  locked = false;
+  seconds = 15;
+
+  const item = questions[current];
+  $("questionNumber").textContent =
+    `QUESTION ${String(current + 1).padStart(2, "0")} / 10`;
+  $("question").textContent = item.q;
+  $("timer").textContent = "15s";
+  $("timer").classList.remove("urgent");
+  $("progressBar").style.width = `${current / questions.length * 100}%`;
+  $("feedback").textContent = "";
+
+  const options = $("options");
+  options.replaceChildren();
+
+  item.a.forEach((answer, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "option";
+
+    const letter = document.createElement("span");
+    letter.className = "letter";
+    letter.textContent = String.fromCharCode(65 + index);
+
+    const label = document.createElement("span");
+    label.textContent = answer;
+
+    button.append(letter, label);
+    button.addEventListener("click", () => answerQuestion(index));
+    options.appendChild(button);
+  });
+
+  timerId = setInterval(() => {
+    seconds--;
+    $("timer").textContent = `${seconds}s`;
+    $("timer").classList.toggle("urgent", seconds <= 5);
+
+    if (seconds <= 0) {
+      clearInterval(timerId);
+      answerQuestion(-1);
+    }
+  }, 1000);
+}
+
+function answerQuestion(choice) {
+  if (locked) return;
+  locked = true;
+  clearInterval(timerId);
+
+  const item = questions[current];
+  const buttons = [...document.querySelectorAll(".option")];
+
+  buttons.forEach((button, index) => {
+    button.disabled = true;
+    if (index === item.c) button.classList.add("correct");
+    if (index === choice && choice !== item.c) button.classList.add("wrong");
+  });
+
+  if (choice === item.c) {
+    score++;
+    $("feedback").textContent = "✓ Correct! +1 point. " + item.why;
+  } else if (choice === -1) {
+    $("feedback").textContent = "⌛ Time is up! " + item.why;
+  } else {
+    $("feedback").textContent = "Not quite. " + item.why;
+  }
+
+  $("progressBar").style.width =
+    `${(current + 1) / questions.length * 100}%`;
+
+  nextId = setTimeout(() => {
+    current++;
+    if (current < questions.length) showQuestion();
+    else finishQuiz();
+  }, 1400);
+}
+
+function readScores() {
+  try {
+    const data = JSON.parse(localStorage.getItem("cyberGuardScores") || "[]");
+    if (!Array.isArray(data)) return [];
+    return data.filter(entry =>
+      entry && typeof entry.name === "string" &&
+      Number.isInteger(entry.score) && entry.score >= 0 &&
+      entry.score <= 10
+    );
+  } catch {
+    return [];
+  }
+}
+
+function saveScore() {
+  const scores = readScores();
+  scores.push({ name: nickname, score: score });
+  scores.sort((a, b) => b.score - a.score);
+  try {
+    localStorage.setItem("cyberGuardScores", JSON.stringify(scores.slice(0, 10)));
+  } catch {
+    $("resultMessage").textContent +=
+      " Scores could not be saved by this browser.";
+  }
+}
+
+function showLeaderboard() {
+  const list = $("leaderboard");
+  list.replaceChildren();
+  const scores = readScores();
+
+  if (!scores.length) {
+    const li = document.createElement("li");
+    li.textContent = "No scores yet. Play a round to begin!";
+    list.appendChild(li);
+    return;
+  }
+
+  scores.forEach((entry, index) => {
+    const li = document.createElement("li");
+    const medals = ["🥇", "🥈", "🥉"];
+    li.textContent =
+      `${medals[index] || "🏅"} ${entry.name} — ${entry.score}/10`;
+    list.appendChild(li);
+  });
+}
+
+function finishQuiz() {
+  clearInterval(timerId);
+  clearTimeout(nextId);
+  showScreen("resultScreen");
+
+  $("resultTitle").textContent = `Well played, ${nickname}!`;
+  $("finalScore").textContent = `${score}/10`;
+
+  let rank, description;
+  if (score === 10) {
+    rank = "Cybersecurity Legend";
+    description = "Perfect score! You answered every question correctly.";
+  } else if (score >= 8) {
+    rank = "Cyber Hero";
+    description = "Excellent work. You know many useful online safety habits.";
+  } else if (score >= 5) {
+    rank = "Cyber Explorer";
+    description = "Good progress. Keep practising your cybersecurity skills.";
+  } else {
+    rank = "Cyber Learner";
+    description = "Every expert starts by learning. Try again and keep improving.";
+  }
+
+  $("rank").textContent = rank;
+  $("rankDescription").textContent = description;
+  $("resultMessage").textContent =
+    `You earned ${score} point${score === 1 ? "" : "s"} out of 10.`;
+
+  saveScore();
+  showLeaderboard();
+}
+
+$("startForm").addEventListener("submit", startQuiz);
+$("playAgain").addEventListener("click", () => {
+  showScreen("startScreen");
+  $("nickname").value = nickname;
+});
+$("clearScores").addEventListener("click", () => {
+  if (confirm("Clear the leaderboard saved in this browser?")) {
+    try { localStorage.removeItem("cyberGuardScores"); } catch {}
+    showLeaderboard();
+  }
+});
+</script>
+</body>
+</html>
